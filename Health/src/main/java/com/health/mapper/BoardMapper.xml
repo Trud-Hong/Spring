@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.board">
+
+	<select id="maxNum" resultType="int">
+		select nvl(max(num),0) from board
+	</select>
+	
+	<insert id="insertData" parameterType="com.health.dto.BoardDTO">
+		insert into board (board_id, category, title, content, member_no, reg_date)
+		values (#{board_id},#{category},#{title},#{content},#{member_no},sysdate)
+	</insert>
+
+	<select id="getDataCount" parameterType="map" resultType="int">
+		select nvl(count(*),0) from board
+		where ${searchKey} like '%' || #{searchValue} || '%'
+	</select>
+	
+	<select id="getLists" parameterType="map" resultType="com.health.dto.BoardDTO">
+		select * from (
+		select rownum rnum, data.* from(
+		select board_id, category, title, content, 
+		member_no, reg_date from board 
+		where ${searchKey} like '%' || #{searchValue} || '%'
+		order by board_id desc) data)
+	<![CDATA[
+		where rnum>=#{start} and rnum<=#{end}
+	]]>
+	</select>
+	
+	<select id="getReadData" parameterType="int" resultType="com.health.dto.BoardDTO">
+		select board_id, category, title, content, member_no, reg_date
+		from board 
+		where board_id=#{board_id}
+	</select>
+	
+	<update id="updateData" parameterType="com.health.dto.BoardDTO">
+		update board set board_id=#{board_id}, category=#{category}, title=#{title},
+		content=#{content}, member_no=#{member_no} where board_id=#{board_id}
+	</update>
+	
+	<delete id="deleteData" parameterType="int">
+		delete board where board_id=#{board_id}
+	</delete>
+
+</mapper>

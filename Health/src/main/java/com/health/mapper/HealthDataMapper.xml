@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.mapper.HealthDataMapper">
+
+	<!-- 테스트용 
+    <select id="getDayData" resultType="map">
+        SELECT bp, sleep, exercise, diet, condition_score AS condition
+        FROM health_data
+        WHERE year = #{year} AND month = #{month} AND day = #{day}
+    </select>
+    -->
+    
+    <!-- 실제DB연결 -->
+    <select id="getDayData" parameterType="map" resultType="map">
+        SELECT
+            bp.bp_high || '/' || bp.bp_low AS BP,
+            s.sleep_hours || '시간' AS SLEEP,
+            e.name || ' ' || er.duration || '분' AS EXERCISE,
+            d.name || ' / ' || d.category AS DIET,
+            c.score AS CONDITION
+        FROM member m
+        LEFT JOIN bp_record bp
+            ON m.member_no = bp.member_no
+            AND TRUNC(bp.record_date) = TO_DATE(#{year} || '-' || #{month} || '-' || #{day}, 'YYYY-MM-DD')
+        LEFT JOIN sleep_record s
+            ON m.member_no = s.member_no
+            AND TRUNC(s.record_date) = TO_DATE(#{year} || '-' || #{month} || '-' || #{day}, 'YYYY-MM-DD')
+        LEFT JOIN exercise_record er
+            ON m.member_no = er.member_no
+            AND TRUNC(er.ex_date) = TO_DATE(#{year} || '-' || #{month} || '-' || #{day}, 'YYYY-MM-DD')
+        LEFT JOIN exercise e
+            ON er.ex_id = e.ex_id
+        LEFT JOIN diet_record dr
+            ON m.member_no = dr.member_no
+            AND TRUNC(dr.record_date) = TO_DATE(#{year} || '-' || #{month} || '-' || #{day}, 'YYYY-MM-DD')
+        LEFT JOIN diet d
+            ON dr.diet_id = d.diet_id
+        LEFT JOIN condition_score c
+            ON m.member_no = c.member_no
+            AND TRUNC(c.record_date) = TO_DATE(#{year} || '-' || #{month} || '-' || #{day}, 'YYYY-MM-DD')
+        WHERE m.member_no = #{memberNo}
+    </select>
+    
+
+</mapper>

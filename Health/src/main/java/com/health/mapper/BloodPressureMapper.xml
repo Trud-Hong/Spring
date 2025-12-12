@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.bloodPressure">
+
+	<select id="maxNum" resultType="int">
+		select nvl(max(num),0) from blood_pressure
+	</select>
+	
+	<insert id="insertData" parameterType="com.health.dto.BloodPressureDTO">
+		insert into blood_pressure (bp_id, member_no, record_date, bp_level, bp_high, bp_low)
+		values (#{bp_id},#{member_no},#{record_date},#{bp_level},#{bp_high},#{bp_low})
+	</insert>
+
+	<select id="getDataCount" parameterType="map" resultType="int">
+		select nvl(count(*),0) from blood_pressure
+		where ${searchKey} like '%' || #{searchValue} || '%'
+	</select>
+	
+	<select id="getLists" parameterType="map" resultType="com.health.dto.BloodPressureDTO">
+		select * from (
+		select rownum rnum, data.* from(
+		select bp_id, member_no, record_date, bp_level, bp_high, bp_low from blood_pressure
+		where ${searchKey} like '%' || #{searchValue} || '%'
+		order by bp_id desc) data)
+	<![CDATA[
+		where rnum>=#{start} and rnum<=#{end}
+	]]>
+	</select>
+	
+	<select id="getReadData" parameterType="int" resultType="com.health.dto.BloodPressureDTO">
+		select bp_id, member_no, record_date, bp_level, bp_high, bp_low
+		from blood_pressure 
+		where member_no=#{member_no}
+	</select>
+	
+	<update id="updateData" parameterType="com.health.dto.BloodPressureDTO">
+		update blood_pressure set bp_id=#{bp_id}, member_no=#{member_no}, 
+		record_date=#{record_date}, bp_level=#{bp_level}, bp_high=#{bp_high}, 
+		bp_low=#{bp_low} where member_no=#{member_no}
+	</update>
+	
+	<delete id="deleteData" parameterType="int">
+		delete blood_pressure where nmember_no=#{member_no}
+	</delete>
+
+</mapper>

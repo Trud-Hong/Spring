@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;question_form.html&apos; to &apos;question_form.html&apos;&#x0D;&#x0A;- Original project: &apos;Spring-Boot-Board&apos;&#x0D;&#x0A;- Destination element: &apos;question_form.html&apos;&#x0D;&#x0A;- Original element: &apos;question_form.html&apos;" description="Copy file" element1="src/main/resources/templates/question_form.html" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1662429310770" target="/Spring-Boot-Board/src/main/resources/templates/question_form.html" units="0" version="1.0"/>
+</session>

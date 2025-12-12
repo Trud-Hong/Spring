@@ -1,0 +1,104 @@
+package com.jdbc.springweb;
+
+import java.net.URLDecoder;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.jdbc.dao.BoardDAO3;
+import com.jdbc.dto.BoardDTO1;
+import com.jdbc.util.MyUtil;
+
+@Controller
+public class BoardController1 {
+	
+	@Autowired
+	@Qualifier("boardDAO3")
+	BoardDAO3 dao;
+	
+	@Autowired
+	MyUtil myUtil;
+	
+	@RequestMapping(value = "/practice", method =  {RequestMethod.GET})
+	public String home1() {
+		return "index";
+	}
+	
+	/*
+	 * @RequestMapping(value = "/created1.action", method = RequestMethod.GET)
+	 * public String created1() {
+	 * 
+	 * return "bbs/created1"; }
+	 */
+	
+	@RequestMapping(value = "/practice/created1.action")
+	public ModelAndView created1() {
+		
+		ModelAndView mvp = new ModelAndView();
+		
+		mvp.setViewName("bbs/created1");
+		
+		return mvp;
+	}
+	
+	@RequestMapping(value = "/practice/created1_ok.action", method = {RequestMethod.POST})
+	public String created1_ok(BoardDTO1 dto, HttpServletRequest req) {
+		
+		int maxNum = dao.getMaxNum();
+		
+		dto.setNum(maxNum+1);
+		dto.setIpAddr(req.getRemoteAddr());
+		
+		dao.insertData(dto);
+		
+		return "redirect:/practice/list1.action";
+		
+	}
+	
+	@RequestMapping(value = "/practice/list1.action", method = {RequestMethod.GET})
+	public String list(HttpServletRequest req) throws Exception {
+		
+		String cp = req.getContextPath();
+		
+		String pageNum = req.getParameter("pageNum");
+		
+		int currentPage = 1;
+		
+		if(pageNum!=null) {
+			currentPage = Integer.parseInt("searchKey");
+		}
+		
+		String searchKey = req.getParameter("searchKey");
+		String searchValue = req.getParameter("searchValue");
+		
+		if(searchValue==null) {
+			searchKey = "subject";
+			searchValue = "";
+		}else {
+			if(req.getMethod().equalsIgnoreCase("GET")) {
+				searchValue =
+						URLDecoder.decode(searchValue,"UTF-8");
+			}
+		}
+		
+		int dataCount = dao.getDataCount(searchKey, searchValue);
+		
+		int numPerPage = 5;
+		int totalPage =
+				myUtil.getPageCount(numPerPage, dataCount);
+		
+		if(currentPage>totalPage) {
+			currentPage = totalPage;
+		}
+		
+		return "bbs/list1";
+	}
+	
+
+}

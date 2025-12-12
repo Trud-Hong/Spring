@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.habit">
+
+	<select id="maxNum" resultType="int">
+		select nvl(max(num),0) from habit
+	</select>
+	
+	<insert id="insertData" parameterType="com.health.dto.HabitDTO">
+		insert into habit (habit_id, member_no, record_date, breakfast, 
+		breakfast_time, lunch, lunch_time, dinner, dinner_time)
+		values (#{habit_id},#{member_no},#{record_date},#{breakfast},
+		#{breakfast_time},#{lunch},#{lunch_time},dinner,dinner_time)
+	</insert>
+	
+	<select id="getDataCount" parameterType="map" resultType="int">
+		select nvl(count(*),0) from habit
+		where ${searchKey} like '%' || #{searchValue} || '%'
+	</select>
+	
+	<select id="getLists" parameterType="map" resultType="com.health.dto.HabitDTO">
+		select * from (
+		select rownum rnum, data.* from(
+		select habit_id, member_no, record_date, breakfast, 
+		breakfast_time, lunch, lunch_time, dinner, dinner_time from habit 
+		where ${searchKey} like '%' || #{searchValue} || '%'
+		order by habit_id desc) data)
+	<![CDATA[
+		where rnum>=#{start} and rnum<=#{end}
+	]]>
+	</select>
+	
+	<select id="getReadData" parameterType="int" resultType="com.health.dto.HabitDTO">
+		select habit_id, member_no, record_date, breakfast, breakfast_time, 
+		lunch, lunch_time, dinner, dinner_time
+		from habit 
+		where num=#{num}
+	</select>
+	
+	<update id="updateData" parameterType="com.health.dto.HabitDTO">
+		update habit set habit_id=#{habit_id}, member_no=#{member_no}, 
+		record_date=#{record_date}, breakfast=#{breakfast}, 
+		breakfast_time=#{breakfast_time}, breakfast=#{lunch}, 
+		breakfast_time=#{lunch_time}, breakfast=#{dinner}, 
+		breakfast_time=#{dinner_time} where habit_id=#{habit_id}
+	</update>
+	
+	<delete id="deleteData" parameterType="int">
+		delete habit where habit_id=#{habit_id}
+	</delete>
+
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.sleep">
+
+	<select id="maxNum" resultType="int">
+		select nvl(max(num),0) from sleep
+	</select>
+	
+	<insert id="insertData" parameterType="com.health.dto.SleepDTO">
+		insert into sleep (sleep_id, member_no, record_date, sleep_hours, bedtime)
+		values (#{sleep_id},#{member_no},#{record_date},#{sleep_hours},#{bedtime})
+	</insert>
+	
+	<select id="getDataCount" parameterType="map" resultType="int">
+		select nvl(count(*),0) from sleep
+		where ${searchKey} like '%' || #{searchValue} || '%'
+	</select>
+	
+	<select id="getLists" parameterType="map" resultType="com.health.dto.SleepDTO">
+		select * from (
+		select rownum rnum, data.* from(
+		select sleep_id, member_no, record_date, sleep_hours, bedtime from sleep 
+		where ${searchKey} like '%' || #{searchValue} || '%'
+		order by sleep_id desc) data)
+	<![CDATA[
+		where rnum>=#{start} and rnum<=#{end}
+	]]>
+	</select>
+	
+	<select id="getReadData" parameterType="int" resultType="com.health.dto.SleepDTO">
+		select sleep_id, member_no, record_date, sleep_hours, bedtime
+		from sleep 
+		where num=#{num}
+	</select>
+	
+	<update id="updateData" parameterType="com.health.dto.SleepDTO">
+		update sleep set sleep_id=#{sleep_id}, member_no=#{member_no}, record_date=#{record_date},
+		sleep_hours=#{sleep_hours}, bedtime=#{bedtime} where sleep_id=#{sleep_id}
+	</update>
+	
+	<delete id="deleteData" parameterType="int">
+		delete sleep where sleep_id=#{sleep_id}
+	</delete>
+
+</mapper>

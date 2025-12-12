@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;HelloController.java&apos; to &apos;SpringTest/src/main/java/com.boot.react&apos;&#x0D;&#x0A;- Original project: &apos;SpringTest&apos;&#x0D;&#x0A;- Destination element: &apos;SpringTest/src/main/java/com.boot.react&apos;&#x0D;&#x0A;- Original element: &apos;com.boot.react.HelloController.java&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.boot.react" element1="/src\/test\/java=/gradle_scope=/test=/=/gradle_used_by_scope=/test=/=/test=/true=/&lt;com.boot.react{HelloController.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1706578862244" units="1" version="1.0"/>
+</session>

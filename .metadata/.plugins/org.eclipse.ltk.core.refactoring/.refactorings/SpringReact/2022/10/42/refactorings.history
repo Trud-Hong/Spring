@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;SpringReact/src/main/frontend/src/components/spring.js&apos; to &apos;Spring.js&apos;" description="Rename resource &apos;spring.js&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/frontend/src/components/spring.js" name="Spring.js" stamp="1665713573933" updateReferences="true"/>
+</session>

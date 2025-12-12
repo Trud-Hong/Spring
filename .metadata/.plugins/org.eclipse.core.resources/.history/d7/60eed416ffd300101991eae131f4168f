@@ -1,0 +1,27 @@
+package com.jdbc.springweb;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.jdbc.dao.BoardDAO3;
+import com.jdbc.util.MyUtil;
+
+@Controller
+public class BoardController1 {
+	
+	@Autowired
+	@Qualifier("boardDAO3")
+	BoardDAO3 dao;
+	
+	@Autowired
+	MyUtil myUtil;
+	
+	@RequestMapping(value = "/practice", method =  {RequestMethod.GET})
+	public String home1() {
+		return "index";
+	}
+
+}

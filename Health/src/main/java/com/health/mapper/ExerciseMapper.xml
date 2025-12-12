@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.exercise">
+
+	<select id="maxNum" resultType="int">
+		select nvl(max(num),0) from exercise
+	</select>
+	
+	<insert id="insertData" parameterType="com.health.dto.ExerciseDTO">
+		insert into exercise (ex_id, category, name, kcal_burn)
+		values (#{ex_id},#{category},#{name},#{kcal_burn})
+	</insert>
+	
+	<select id="getDataCount" parameterType="map" resultType="int">
+		select nvl(count(*),0) from exercise
+		where ${searchKey} like '%' || #{searchValue} || '%'
+	</select>
+	
+	<select id="getLists" parameterType="map" resultType="com.health.dto.ExerciseDTO">
+		select * from (
+		select rownum rnum, data.* from(
+		select ex_id, category, name, kcal_burn from exercise 
+		where ${searchKey} like '%' || #{searchValue} || '%'
+		order by ex_id desc) data)
+	<![CDATA[
+		where rnum>=#{start} and rnum<=#{end}
+	]]>
+	</select>
+	
+	<select id="getReadData" parameterType="int" resultType="com.health.dto.ExerciseDTO">
+		select ex_id, category, name, kcal_burn
+		from exercise 
+		where num=#{num}
+	</select>
+	
+	<update id="updateData" parameterType="com.health.dto.ExerciseDTO">
+		update exercise set ex_id=#{ex_id}, name=#{name}, 
+		kcal_burn=#{kcal_burn} where ex_id=#{ex_id}
+	</update>
+	
+	<delete id="deleteData" parameterType="int">
+		delete exercise where ex_id=#{ex_id}
+	</delete>
+
+</mapper>
